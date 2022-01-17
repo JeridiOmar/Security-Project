@@ -1,4 +1,5 @@
 import pyinputplus as pyip
+import sqlite3
 
 
 def menu():
@@ -22,4 +23,14 @@ def menu():
 
 
 if __name__ == '__main__':
+    con = sqlite3.connect('pen')
+    cur = con.cursor()
+    cur.execute("INSERT INTO users (firstname,lastname,email,password) VALUES ('omar','jeridi',"
+                "'amrouch_jridi@hotmail.fr','pass')")
+
+    con.commit()
+    for row in cur.execute('SELECT * FROM users'):
+        print(row)
+    con.close()
+
     menu()
