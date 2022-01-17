@@ -2,6 +2,7 @@ import pyinputplus as pyip
 import sqlite3
 
 from encoding.Encoding import Encoding
+from hashing.Hashing import Hashing
 
 
 def menu():
@@ -12,7 +13,7 @@ def menu():
         if choice == 'encoding':
             Encoding.menu()
         elif choice == 'hashing':
-            print('hashing')
+            Hashing.hash_menu()
         elif choice == 'password-crack':
             print('password-crack')
         elif choice == 'symmetric-encrypt':
