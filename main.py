@@ -1,5 +1,10 @@
+import hashlib
 import pyinputplus as pyip
-import sqlite3
+
+from random import randint
+from services.dao import add_new_user, fetch_user
+from services.emails_service import *
+from services.input_service import *
 
 
 def menu():
@@ -22,15 +27,47 @@ def menu():
             return
 
 
+def signIn():
+    print()
+    print("============== SIGN IN ===============")
+    print()
+
+    email = input('email : ')
+    password = input('password : ')
+
+    user = fetch_user(email, hashlib.sha256(bytes(password, 'utf-8')).digest())
+    # print('user : ', user)
+    return user
+
+
+def signUp():
+    print()
+    print("============== SIGN UP ===============")
+    print()
+
+    firstname = input('enter your firstname : ')
+    lastname = input('enter your lastname : ')
+
+    email = read_email()
+
+    password = read_pass()
+
+    confirm_pass(password)
+
+    message = randint(100000, 999999)  # random normalement
+
+    sendCode(email, message, firstname)
+
+    print("we've sent you an email containing a verification code!")
+    code = int(input("code"))
+    while int(code) != message:
+        resend_mail = input('resend mail yes/no')
+        if resend_mail == 'yes':
+            sendCode(email, message, firstname)
+        code = input("codes don't match, retype code : ")
+
+    add_new_user(firstname, lastname, email, hashlib.sha256(bytes(password, 'utf-8')).digest())
+
+
 if __name__ == '__main__':
-    con = sqlite3.connect('pen')
-    cur = con.cursor()
-    cur.execute("INSERT INTO users (firstname,lastname,email,password) VALUES ('omar','jeridi',"
-                "'amrouch_jridi@hotmail.fr','pass')")
-
-    con.commit()
-    for row in cur.execute('SELECT * FROM users'):
-        print(row)
-    con.close()
-
-    menu()
+    signIn()
