@@ -27,7 +27,7 @@ def menu():
             return
 
 
-def signIn():
+def signIn(): # returns a tuple with user infos
     print()
     print("============== SIGN IN ===============")
     print()
