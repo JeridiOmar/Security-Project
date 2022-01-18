@@ -70,4 +70,7 @@ def signUp():
 
 
 if __name__ == '__main__':
-    signIn()
+
+    signUp()
+
+    user = signIn()
