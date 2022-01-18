@@ -1,6 +1,7 @@
 import pyinputplus as pyip
 import sqlite3
 
+from cracking.Cracking import Cracking
 from encoding.Encoding import Encoding
 from hashing.Hashing import Hashing
 
@@ -8,14 +9,14 @@ from hashing.Hashing import Hashing
 def menu():
     while True:
         choice = pyip.inputMenu(
-            ['encoding', 'hashing', 'password-crack', 'symmetric-encrypt', 'asymmetric-encrypt', 'chat-room', 'quit'],
+            ['encoding', 'hashing', 'mail-crack', 'symmetric-encrypt', 'asymmetric-encrypt', 'chat-room', 'quit'],
             numbered=True)
         if choice == 'encoding':
             Encoding.menu()
         elif choice == 'hashing':
             Hashing.hash_menu()
-        elif choice == 'password-crack':
-            print('password-crack')
+        elif choice == 'mail-crack':
+            Cracking.menu()
         elif choice == 'symmetric-encrypt':
             print('symmetric-encrypt')
         elif choice == 'asymmetric-encrypt':

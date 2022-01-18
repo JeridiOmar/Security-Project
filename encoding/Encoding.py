@@ -6,7 +6,7 @@ import pyinputplus as pyip
 class Encoding:
     @classmethod
     def menu(cls):
-        print('/n')
+        print('\n')
         print("--------ENCODING MODULE--------\n")
         while True:
             choice = pyip.inputMenu(['encode', 'decode', 'quit'], numbered=True)
