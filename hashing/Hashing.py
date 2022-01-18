@@ -2,6 +2,7 @@ import hashlib
 
 import pyinputplus as pyip
 
+
 class Hashing:
     @classmethod
     def hash_menu(cls):
@@ -13,7 +14,7 @@ class Hashing:
             if choice == 'hash':
                 text = pyip.inputStr('Enter text to hash : \n')
                 hashed_text = Hashing.multi_method_hash(text)
-                print(' Hash ====> '+hashed_text)
+                print(' Hash ====> ' + hashed_text)
             else:
                 return
 
