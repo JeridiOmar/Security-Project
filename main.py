@@ -1,6 +1,7 @@
 import pyinputplus as pyip
 import sqlite3
 
+from asymmetric_encryption.AsymmetricEncrypt import AsymmetricEncrypt
 from cracking.Cracking import Cracking
 from encoding.Encoding import Encoding
 from hashing.Hashing import Hashing
@@ -20,7 +21,7 @@ def menu():
         elif choice == 'symmetric-encrypt':
             SymmetricEncrypt.menu()
         elif choice == 'asymmetric-encrypt':
-            print('asymmetric-encrypt')
+            AsymmetricEncrypt.menu()
         elif choice == 'chat-room':
             print('chat-room')
         elif choice == 'quit':
