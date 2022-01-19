@@ -15,6 +15,15 @@ from symmetric_encryption.SymmetricEncrypt import SymmetricEncrypt
 def menu():
     while True:
         choice = pyip.inputMenu(
+            ['sign-in', 'sign-up', 'quit'], numbered=True)
+        if choice == 'sign-in':
+            return signIn()
+        if choice =='sign-up':
+            signUp()
+
+def menu_logged_in():
+    while True:
+        choice = pyip.inputMenu(
             ['encoding', 'hashing', 'mail-crack', 'symmetric-encrypt', 'asymmetric-encrypt', 'chat-room', 'quit'],
             numbered=True)
         if choice == 'encoding':
@@ -37,23 +46,24 @@ def signIn(): # returns a tuple with user infos
     print()
     print("============== SIGN IN ===============")
     print()
-
-    email = input('email : ')
-    password = input('password : ')
-
-    user = fetch_user(email, hashlib.sha256(bytes(password, 'utf-8')).digest())
+    while True :
+        email = input('email : ')
+        password = input('password : ')
+        user = fetch_user(email, hashlib.sha256(bytes(password, 'utf-8')).digest())
+        if user is not None:
+            break
 
     firstname = user[2]
 
     message = randint(100000, 999999)
 
     send_double_factor_code(email, message, firstname)
+    while True:
+        verify_code = input('type your code here : ')
+        # print('user : ', user)
+        if int(verify_code) == message:
+            return user
 
-    verify_code = input('type your code here : ')
-    # print('user : ', user)
-    if int(verify_code) == message:
-        return user
-    return None
 
 
 def signUp():
@@ -75,7 +85,7 @@ def signUp():
     sendCode(email, message, firstname)
 
     print("we've sent you an email containing a verification code!")
-    code = int(input("code"))
+    code = int(input("code : "))
     while int(code) != message:
         resend_mail = input('resend mail yes/no')
         if resend_mail == 'yes':
@@ -87,6 +97,5 @@ def signUp():
 
 if __name__ == '__main__':
 
-    # signUp()
-
-    user = signIn()
+    user = menu()
+    menu_logged_in()
