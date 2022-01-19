@@ -36,8 +36,18 @@ def signIn(): # returns a tuple with user infos
     password = input('password : ')
 
     user = fetch_user(email, hashlib.sha256(bytes(password, 'utf-8')).digest())
+
+    firstname = user[2]
+
+    message = randint(100000, 999999)
+
+    send_double_factor_code(email, message, firstname)
+
+    verify_code = input('type your code here : ')
     # print('user : ', user)
-    return user
+    if int(verify_code) == message:
+        return user
+    return None
 
 
 def signUp():
@@ -54,7 +64,7 @@ def signUp():
 
     confirm_pass(password)
 
-    message = randint(100000, 999999)  # random normalement
+    message = randint(100000, 999999)
 
     sendCode(email, message, firstname)
 
@@ -71,6 +81,6 @@ def signUp():
 
 if __name__ == '__main__':
 
-    signUp()
+    # signUp()
 
     user = signIn()
