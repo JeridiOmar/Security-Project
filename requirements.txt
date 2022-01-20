@@ -1,3 +1,4 @@
 pyinputplus~=0.2.12
 base32hex~=1.0.2
 pycryptodome
+rsa~=4.8

@@ -1,7 +1,17 @@
 import hashlib
+import threading
+from socket import socket
+from tkinter import mainloop
+from socket import *
 import pyinputplus as pyip
 
 from random import randint
+
+import rsa
+
+from client.assist import process
+from client.assist.sthread import stop_thread
+from client.chat_client import ChatRoomGUI
 from services.dao import add_new_user, fetch_user
 from services.emails_service import *
 from services.input_service import *
@@ -12,16 +22,18 @@ from encoding.Encoding import Encoding
 from hashing.Hashing import Hashing
 from symmetric_encryption.SymmetricEncrypt import SymmetricEncrypt
 
+
 def menu():
     while True:
         choice = pyip.inputMenu(
             ['sign-in', 'sign-up', 'quit'], numbered=True)
         if choice == 'sign-in':
             return signIn()
-        if choice =='sign-up':
+        if choice == 'sign-up':
             signUp()
 
-def menu_logged_in():
+
+def menu_logged_in(name):
     while True:
         choice = pyip.inputMenu(
             ['encoding', 'hashing', 'mail-crack', 'symmetric-encrypt', 'asymmetric-encrypt', 'chat-room', 'quit'],
@@ -37,18 +49,18 @@ def menu_logged_in():
         elif choice == 'asymmetric-encrypt':
             AsymmetricEncrypt.menu()
         elif choice == 'chat-room':
-            print('chat-room')
+            launch_chat_room(name)
         elif choice == 'quit':
             return
 
 
-def signIn(): # returns a tuple with user infos
+def signIn():  # returns a tuple with user infos
     print()
     print("============== SIGN IN ===============")
     print()
-    while True :
+    while True:
         email = input('email : ')
-        password = input('password : ')
+        password = read_pass()
         user = fetch_user(email, hashlib.sha256(bytes(password, 'utf-8')).digest())
         if user is not None:
             break
@@ -63,7 +75,6 @@ def signIn(): # returns a tuple with user infos
         # print('user : ', user)
         if int(verify_code) == message:
             return user
-
 
 
 def signUp():
@@ -95,7 +106,32 @@ def signUp():
     add_new_user(firstname, lastname, email, hashlib.sha256(bytes(password, 'utf-8')).digest())
 
 
-if __name__ == '__main__':
+def launch_chat_room(name):
+    HOST = 'localhost'  # input('Please input the ip of the server:')
+    PORT = 12345
+    BUFSIZ = 1024
+    ADDR = (HOST, PORT)
+    pub, priv = rsa.newkeys(1024)
+    udpCliSock = socket(AF_INET, SOCK_DGRAM)
+    chat_room = ChatRoomGUI(udpCliSock, ADDR, name)
 
+    mthread = threading.Thread(target=chat_room.recv_message, args=[])
+
+    mthread.start()
+
+    mainloop()
+
+    msg = 'disconnect'
+
+    package = process.assemble('disconnect', name, 'server', len(msg), msg)
+
+    udpCliSock.sendto(package, ADDR)
+
+    stop_thread(mthread)
+
+    udpCliSock.close()
+
+
+if __name__ == '__main__':
     user = menu()
-    menu_logged_in()
+    menu_logged_in(user[2])
